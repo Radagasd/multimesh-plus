@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="MMPlusMesh" load_steps=4 format=3 uid="uid://cwldwmctr547x"]
+[gd_resource type="Resource" script_class="MMPlusMesh" format=3 uid="uid://cwldwmctr547x"]
 
 [ext_resource type="Script" uid="uid://dre8v2iurryb6" path="res://addons/mm_plus_editor/resources/mm_plus_mesh.gd" id="1_qox4d"]
 

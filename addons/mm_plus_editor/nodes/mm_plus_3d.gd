@@ -3,8 +3,8 @@
 class_name MmPlus3D
 extends Node3D
 
-@export var grid_size : float = 50.0
-@export var previous_grid_size : float = 50.0
+@export_storage var grid_size : float = 50.0
+@export_storage var previous_grid_size : float = 50.0
 @export var data : Array[MMPlusData] : set = _set_data
 
 signal data_changed
