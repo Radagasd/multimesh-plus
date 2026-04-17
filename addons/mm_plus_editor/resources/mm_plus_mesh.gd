@@ -2,8 +2,10 @@
 class_name MMPlusMesh
 extends Resource
 
+@export_tool_button("Generate Thumbnail") var update_thumbnail_action: Callable = update_thumbnail
 @export var name : StringName = "" : set = _set_name
 @export var mesh : Mesh : set = _set_mesh
+@export var thumbnail: Texture = null
 @export var cast_shadow : RenderingServer.ShadowCastingSetting = RenderingServer.ShadowCastingSetting.SHADOW_CASTING_SETTING_ON : set = _set_shadow_cast
 ## Minimum space between this instance and another to avoid any overlap.
 @export var spacing : float = 0.5 : set = _set_spacing
@@ -27,6 +29,9 @@ enum RotationMode {
 }
 
 @export var rotation_mode : RotationMode = RotationMode.NONE
+
+func update_thumbnail() -> void:
+	thumbnail = EditorInterface.make_mesh_previews([mesh], 64)[0]
 
 func _set_name(new_name : StringName) -> void:
 	name = new_name

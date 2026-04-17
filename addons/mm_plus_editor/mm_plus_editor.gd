@@ -70,7 +70,7 @@ func _create_section(section_name: String) -> Control:
 	var section_label: Label = Label.new()
 	section_label.text = section_name
 	section_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	section_label.theme = preload("uid://clgmp5whwhelp")
+	section_label.theme = preload("./assets/section_theme.tres")
 	return section_label
 
 func init_ui() -> void:
@@ -181,7 +181,7 @@ func init_ui() -> void:
 
 	# Items section
 	main_tool_bar.add_child(_create_section("Items"))
-	items_list = preload("uid://bjj2gvaus0bgs").instantiate()
+	items_list = preload("./nodes/items_list/items_list.tscn").instantiate()
 	items_list.request_add_item.connect(_on_request_add_item)
 	items_list.request_delete_item.connect(_on_request_delete_item)
 	main_tool_bar.add_child(items_list)

@@ -41,6 +41,7 @@ func load_from_list(plus_mesh_list: Array[MMPlusMesh]) -> Array[MMPlusMeshItem]:
 func add_item(plus_mesh: MMPlusMesh) -> MMPlusMeshItem:
 	var item: MMPlusMeshItem = ITEM.instantiate()
 	item.item_name = plus_mesh.name
+	item.item_texture = plus_mesh.thumbnail
 	item_holder.add_child(item)
 	item.delete_button.pressed.connect(_on_delete_button_pressed.bind(item))
 	return item
