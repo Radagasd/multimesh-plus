@@ -463,17 +463,22 @@ func _apply_paint_mode(event : InputEventMouse, t : Transform3D) -> void:
 			var circle_offset : Vector2 = _random_in_circle(brush_size)
 			var target = t.translated_local(Vector3(circle_offset.x, 0.0, circle_offset.y))
 
+			var global_t: Transform3D = selected_node.global_transform * target
+
 			# Reproject the target onto the surface, as it is now displaced relative to the base target.
-			var ray_cast_result = _ray_cast(target.origin + target.basis.y, target.origin - target.basis.y)
-			if ray_cast_result == {}:
-				continue
+			var ray_cast_result = _ray_cast(
+				global_t.origin + global_t.basis.y,
+				global_t.origin - global_t.basis.y
+				)
+
+			if ray_cast_result == {}: continue
 
 			var instance_basis : Basis = (
 				_get_basis_from_normal(ray_cast_result.normal)
 				if mesh_data.align_on_surface_normal
 				else Basis.IDENTITY)
 
-			target = Transform3D(instance_basis, ray_cast_result.position)
+			target = Transform3D(instance_basis, selected_node.global_transform.inverse() * ray_cast_result.position)
 
 			# Check if target position is not too close to other already spawned instances.
 			var min_space_between_instances : float = mesh_data.spacing
