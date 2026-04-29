@@ -1,4 +1,4 @@
-class_name MMRidData
+class_name MMRidRef
 extends Object
 
 var multimesh_RID_map : Dictionary[AABB, RID] = {}
