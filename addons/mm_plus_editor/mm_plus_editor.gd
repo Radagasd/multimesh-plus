@@ -21,8 +21,9 @@ var brush_size_map : Dictionary[MODE, float] = {
 	MODE.SCALE: 1.0,
 	MODE.COLOR: 1.0,
 }
-const BTN_THEME = preload("./assets/btn_theme.tres")
+
 const SPHERE_MAT = preload("./assets/materials/sphere_mat.tres")
+const SECTION_THEME: Theme = preload("./assets/section_theme.tres")
 
 # Brush size scroll shortcut settings
 const BRUSH_SCROLL_STEP_FINE : float = 0.2    # Step size below threshold
@@ -70,10 +71,15 @@ func _create_section(section_name: String) -> Control:
 	var section_label: Label = Label.new()
 	section_label.text = section_name
 	section_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	section_label.theme = preload("./assets/section_theme.tres")
+	section_label.theme = SECTION_THEME
 	return section_label
 
-func init_ui() -> void:
+func _init_ui() -> void:
+	var base_color: Color = EditorInterface.get_base_control().get_theme_color("base_color", "Editor")
+	var s_b: StyleBoxFlat = SECTION_THEME.get_stylebox("normal", "Label")
+	s_b.bg_color = base_color.darkened(0.15)
+	SECTION_THEME.set_stylebox("normal", "Label", s_b)
+
 	main_tool_bar = VBoxContainer.new()
 	color_tool_bar = HBoxContainer.new()
 	main_tool_bar.hide()
@@ -90,12 +96,12 @@ func init_ui() -> void:
 
 	for btn_id in btn_mode_map:
 		var btn : Button = Button.new()
-		btn.theme = BTN_THEME
 		btn.text = btn_mode_map[btn_id].title
 		btn.icon = gui.get_theme_icon(btn_mode_map[btn_id].icon, "EditorIcons")
 		btn.button_group = button_group
 		btn.toggle_mode = true
 		btn.set_meta("ID", btn_id)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		mode_buttons_container.add_child(btn)
 
 	button_group.allow_unpress = true
@@ -126,7 +132,6 @@ func init_ui() -> void:
 
 	randomize_color_button = Button.new()
 	randomize_color_button.icon = gui.get_theme_icon("RandomNumberGenerator", "EditorIcons")
-	randomize_color_button.theme = BTN_THEME
 	randomize_color_button.toggle_mode = true
 	randomize_color_button.tooltip_text = "Randomize Color"
 	color_tool_bar.add_child(randomize_color_button)
@@ -169,14 +174,16 @@ func init_ui() -> void:
 	collision_layer_container.set("theme_override_constants/h_separation", 1)
 	collision_layer_container.set("theme_override_constants/v_separation", 1)
 	collision_layer_container.columns = 16
+	collision_layer_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	settings_container.add_child(collision_layer_container)
 
 	for i in 32:
 		var layer_btn : Button = Button.new()
+		collision_layer_container.add_child(layer_btn)
 		layer_btn.text = str(i + 1)
 		layer_btn.toggle_mode = true
 		if i == 0: layer_btn.set_pressed(true)
-		collision_layer_container.add_child(layer_btn)
+		layer_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		layer_btn.toggled.connect(_toggle_collision_layer.bind(i))
 
 	# Items section
@@ -309,7 +316,7 @@ func _on_button_group_press(_pressed_button : BaseButton):
 	selected_node.set_meta("_edit_lock_", null if btn == null else true)
 
 func _enter_tree() -> void:
-	init_ui()
+	_init_ui()
 
 func _save_external_data() -> void:
 	_check_unused_resources()
