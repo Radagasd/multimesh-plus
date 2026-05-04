@@ -406,12 +406,15 @@ func _forward_3d_gui_input(viewport_camera, event):
 			_apply_brush_size_scroll(event)
 		return EditorPlugin.AFTER_GUI_INPUT_STOP
 
-	_check_paint_logic(viewport_camera, event)
+	_check_editing_modes(viewport_camera, event)
 	var is_left_click : bool = event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed
 	if !is_left_click: return EditorPlugin.AFTER_GUI_INPUT_PASS
 	return EditorPlugin.AFTER_GUI_INPUT_STOP
 
-func _check_paint_logic(viewport_camera, event) -> void:
+func _check_editing_modes(viewport_camera, event) -> void:
+	# Editing modes cannot be used if there are no mesh groups to edit.
+	if selected_node.data.is_empty(): return
+
 	var mouse_event : InputEventMouse = event as InputEventMouse
 	if !mouse_event: return
 
@@ -591,13 +594,17 @@ func _ray_cast(start : Vector3, end : Vector3) -> Dictionary:
 	return ray_cast_result
 
 func _check_unused_resources() -> void:
+	# Create a save directory if one does not already exist.
 	var save_path: String = "res://mmplus_save_dir/"
-
 	if !DirAccess.dir_exists_absolute(save_path):
 		DirAccess.make_dir_absolute(save_path)
 
+	# TODO: Improve deletion method
+	# Loop through all existing MM+ resources and delete those that aren't referenced anywhere.
+	# This method is a bit of a brute-force approach. We need a better way to keep track of all unused resources resulting from group deletion or parent scene deletion.
+
 	var files = DirAccess.get_files_at(save_path)
-	
+
 	for file in files:
 		var file_path: String = save_path.path_join(file)
 
