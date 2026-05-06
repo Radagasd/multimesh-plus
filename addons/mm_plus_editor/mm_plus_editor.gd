@@ -557,6 +557,10 @@ func _apply_color_mode(t : Transform3D) -> void:
 	# Colorize uses brush_size directly since grid stores base positions (without offset)
 	for data_group_idx in data_group_list.size():
 		if active_layers[data_group_idx] == false: continue
+
+		var data_mode : MMDataMode.Mode = selected_node.data[data_group_idx].mesh_data.data_mode
+		if data_mode == MMDataMode.Mode.TransformOnly: continue
+
 		var data_group : MMGroup = data_group_list[data_group_idx]
 		# Query uses brush_size - grid has logical positions
 		data_group.set_buffer_color_in_sphere(t.origin, brush_size, color_picker.color, randomize_color_button.button_pressed)
