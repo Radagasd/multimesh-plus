@@ -33,7 +33,9 @@ enum RotationMode {
 @export var data_mode : MMDataMode.Mode = MMDataMode.Mode.TransformOnly
 
 func update_thumbnail() -> void:
-	thumbnail = EditorInterface.make_mesh_previews([mesh], 64)[0]
+	if Engine.is_editor_hint():
+		var editor_interface = Engine.get_singleton("EditorInterface") # Avoids explicitly using the Singleton
+		thumbnail = editor_interface.make_mesh_previews([mesh], 64)[0]
 
 func _set_name(new_name : StringName) -> void:
 	name = new_name
